@@ -110,7 +110,10 @@ CUDA_VISIBLE_DEVICES=3 python2 tools/infer_simple.py \
     下面是官网推荐的安装方法：
     git clone https://github.com/pytorch/pytorch.git && cd pytorch
     git submodule update --init --recursive
-    python setup.py install
+    sudo FULL_CAFFE2=1 python setup.py install
+    
+**注意这个地方，因为默认是不build caffe2的，所以需要额外添加FULL_CAFFE2=1参数，也是一个深坑了**
+所以如果遇到找不到caffe2_pb文件的，很可能就是这个地方没有build caffe2
 
 6. 中间你可能会遇到各种问题：例如：
     
