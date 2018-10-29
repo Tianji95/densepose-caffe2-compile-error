@@ -171,7 +171,14 @@ anyway，自己查一下requirement里面都有什么东西，然后自己手动
 注意这里面的Caffe2_DIR指的是CMake变量而不是环境变量，注意区分
 
 哇靠新版的caffe2实在是太坑了，在文件夹里面cmake的路径完全就是乱掉的，我实在没办法就把之前弄好的docker里面的文件放进来才行。。。。
-首先把docker里面的caffe2_build和caffe2文件夹拷出来，然后把PYTHONPATH 和Caffe_DIR修改掉，最后安装2.6.1版本的protobuf，编译出来的libprotobuf.so拷贝到/usr/lib/x86_64-linux-gnu/里面，最后再执行
+首先把docker里面的caffe2_build和caffe2文件夹拷出来，然后把PYTHONPATH 和Caffe_DIR修改掉，
+
+    sudo cp -r caffe2 /usr/local
+    sudo cp -r caffe2_build /usr/local
+    export PYTHONPATH=/usr/local/caffe2_build
+    export Caffe2_DIR=/usr/local/caffe2_build/share/cmake/Caffe2
+    
+最后安装2.6.1版本的protobuf，编译出来的libprotobuf.so拷贝到/usr/lib/x86_64-linux-gnu/里面，最后再执行
     
     sudo make ops Caffe2_DIR=/usr/local/caffe2_build/share/cmake/Caffe2
  
