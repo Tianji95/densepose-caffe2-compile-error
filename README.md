@@ -227,6 +227,10 @@ okok，你厉害你厉害，我考过来还不行么。。。。然后我就把c
     sudo ln -sf libcudnn.so.7  libcudnn.so
     sudo ldconfig
 
+注意这个时候的LD_LIBRARY_PATH尽量要干净，最好只包含caffe2_build和densepose根目录，例如我的profile文件：
+    
+    export PYTHONPATH=/usr/local/caffe2_build:/home/tianji/paper_code/densepose/densepose
+    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 10. densepose/build/libcaffe2_detectron_custom_ops_gpu.so: undefined symbol: _ZN6google8protobuf8internal9ArenaImpl28AllocateAlignedAndAddCleanupEmPFvPvE 坑
 把protobuf卸载掉就好了，这个是因为系统中有两个protobuf的原因，
