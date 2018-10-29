@@ -175,9 +175,15 @@ anyway，自己查一下requirement里面都有什么东西，然后自己手动
 
     sudo cp -r caffe2 /usr/local
     sudo cp -r caffe2_build /usr/local
+    gedit ～/.profile
     export PYTHONPATH=/usr/local/caffe2_build
     export Caffe2_DIR=/usr/local/caffe2_build/share/cmake/Caffe2
+
+重启电脑，或者source ~/.profile
+删除densepose里面的build文件夹，或者执行：
     
+    mv build build_old
+
 最后安装2.6.1版本的protobuf，编译出来的libprotobuf.so拷贝到/usr/lib/x86_64-linux-gnu/里面，最后再执行
     
     sudo make ops Caffe2_DIR=/usr/local/caffe2_build/share/cmake/Caffe2
