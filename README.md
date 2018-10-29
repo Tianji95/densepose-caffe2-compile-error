@@ -47,7 +47,7 @@ nvidia-docker run \
 
 7. 同样的东西，模型也没办法直接用tools/test.py的脚本下载，只能自己先下载下来，然后用xftp传上去以后cp到/tmp下面
 
-8. 直接运行即可
+8. 直接运行即
 ```
 CUDA_VISIBLE_DEVICES=3 python2 tools/infer_simple.py \
     --cfg configs/DensePose_ResNet101_FPN_s1x-e2e.yaml \
@@ -189,6 +189,43 @@ anyway，自己查一下requirement里面都有什么东西，然后自己手动
     sudo make ops Caffe2_DIR=/usr/local/caffe2_build/share/cmake/Caffe2
  
 最终终于编好了。。。。实在是太坑
+
+........................................................................................
+
+你以为到这里就结束了么。。。错。。。。。。我们只是把caffe2的新环境换成了老的。。。。那么对应的so文件等也要全套换掉，不信的话直接跑
+
+    python detectron/tests/test_zero_even_op.py
+看能不能跑起来。。。。。。。。。。。。
+ok问题一个一个解决
+
+10.CRITICAL:root:Cannot load caffe2.python. Error: libcaffe2.so: cannot open shared object file: No such file or directory
+
+找不到so文件了，，，那我们就先把原来的caffe源码换成现在的：
+    
+    cd /usr/local/lib/python2.7/dist-packages
+    sudo mv caffe caffe_old
+    sudo mv caffe2 caffe2_old
+    sudo ln -s /usr/local/caffe2 caffe2
+    sudo gedit /etc/ld.so.conf.d/caffe2.conf
+    sudo gedit /etc/ld.so.conf.d/cuda-8-0.conf
+    sudo ldconfig
+    
+本以为大功告成，然后发现WARNING:root:Debug message: libcudnn.so.7: cannot open shared object file: No such file or directory
+CRITICAL:root:Cannot load caffe2.python. Error: libhiredis.so.0.13: cannot open shared object file: No such file or directory
+
+okok，你厉害你厉害，我考过来还不行么。。。。然后我就把cudnn换成了7，把libhiredis.so.0.13考了一份过来
+
+    sudo cp libhiredis.so.0.13 /usr/lib/x86_64-linux-gnu/libhiredis.so.0.13
+    cd /usr/local/cuda-8.0/lib64
+    sudo rm libcudnn*
+    cd /usr/local/cuda-8.0/include
+    sudo rm cudnn.h 
+    cn ～/cudnn7
+    sudo cp libcudnn* /usr/local/cuda-8.0/lib64
+    sudo cp cudnn.h /usr/local/cuda-8.0/include
+    sudo ln -sf libcudnn.so.7.0.5  libcudnn.so.7 #创建软链接
+    sudo ln -sf libcudnn.so.7  libcudnn.so
+    sudo ldconfig
 
 
 10. densepose/build/libcaffe2_detectron_custom_ops_gpu.so: undefined symbol: _ZN6google8protobuf8internal9ArenaImpl28AllocateAlignedAndAddCleanupEmPFvPvE 坑
